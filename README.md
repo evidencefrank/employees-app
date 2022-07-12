@@ -1,0 +1,4 @@
+Employees App
+
+APP_PORT=8092
+FORWARD_DB_PORT=3392
