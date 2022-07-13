@@ -1,12 +1,12 @@
 <template>
     <div class="flex flex-col items-start justify-start py-4 px-6">
         <div class="mb-4">
-            <h1 class="text-md font-semibold">New Employee</h1>
+            <h1 class="text-md font-semibold">Edit Employee</h1>
         </div>
 
-        <div class="mt-2 mb-6 text-sm text-red-600" v-if="errors !== ''">
-            <p v-html="errors"></p>
-        </div>
+<!--        <div class="mt-2 mb-6 text-sm text-red-600" v-if="errors !== ''">-->
+<!--            <p v-html="errors"></p>-->
+<!--        </div>-->
 
         <div class="overflow-scroll ">
             <form @submit.prevent="saveEmployee">
@@ -18,30 +18,30 @@
                     <div class="flex flex-row items-center justify-between gap-4">
                         <div class="basis-48">
                             <label for="first_name" class="text-sm font-semibold">First Name</label>
-                            <input type="text" v-model="form.first_name" name="first_name" id="first_name" class="w-full rounded-lg grow">
+                            <input type="text" v-model="employee.first_name" name="first_name" id="first_name" class="w-full rounded-lg grow">
                         </div>
                         <div>
                             <label for="last_name" class="text-sm font-semibold">Last Name</label>
-                            <input type="text" v-model="form.last_name" name="last_name" id="last_name" class="w-full rounded-lg grow">
+                            <input type="text" v-model="employee.last_name" name="last_name" id="last_name" class="w-full rounded-lg grow">
                         </div>
                     </div>
                     <div class="flex flex-row items-center justify-between w-full">
                         <div class="w-full">
                             <label for="contact_number" class="text-sm font-semibold">Contact Number</label>
-                            <input type="text" v-model="form.contact_number" name="contact_number" id="contact_number" class="w-full rounded-lg grow">
+                            <input type="text" v-model="employee.contact_number" name="contact_number" id="contact_number" class="w-full rounded-lg grow">
                         </div>
                     </div>
                     <div class="flex flex-row items-center justify-between w-full">
                         <div class="w-full">
                             <label for="email" class="text-sm font-semibold">Email</label>
-                            <input type="text" v-model="form.email" name="email" id="email"  class="w-full rounded-lg grow">
+                            <input type="text" v-model="employee.email" name="email" id="email"  class="w-full rounded-lg grow">
                         </div>
                     </div>
 
                     <div class="flex flex-row items-center justify-between w-2/5">
                         <div class="w-full">
                             <label for="email" class="text-sm font-semibold">Date of Birth</label>
-                            <input type="date" v-model="form.date_of_birth" name="date_of_birth" id="date_of_birth" class="w-full rounded-lg grow">
+                            <input type="date" v-model="employee.date_of_birth" name="date_of_birth" id="date_of_birth" class="w-full rounded-lg grow">
                         </div>
                     </div>
                 </div>
@@ -53,21 +53,21 @@
                     <div class="flex flex-row items-center justify-between gap-8 w-full">
                         <div class="w-full">
                             <label for="address" class="text-sm font-semibold">Address Street</label>
-                            <input type="text" v-model="form.address" name="address" id="address"  class="w-full rounded-lg grow">
+                            <input type="text" v-model="employee.address" name="address" id="address"  class="w-full rounded-lg grow">
                         </div>
                     </div>
                     <div class="flex flex-row items-center justify-between gap-2 w-full">
                         <div class="w-full">
                             <label for="city" class="text-sm font-semibold">City</label>
-                            <input type="text" v-model="form.city" name="city" id="city" class="w-full rounded-lg grow">
+                            <input type="text" v-model="employee.city" name="city" id="city" class="w-full rounded-lg grow">
                         </div>
                         <div class="w-full">
                             <label for="postal_code" class="text-sm font-semibold">Postal Code</label>
-                            <input type="text" v-model="form.postal_code" name="postal_code" id="postal_code"  class="w-full rounded-lg grow">
+                            <input type="text" v-model="employee.postal_code" name="postal_code" id="postal_code"  class="w-full rounded-lg grow">
                         </div>
                         <div class="w-full">
                             <label for="country" class="text-sm font-semibold">Country</label>
-                            <input type="text" v-model="form.country" name="country" id="country" class="w-full rounded-lg grow">
+                            <input type="text" v-model="employee.country" name="country" id="country" class="w-full rounded-lg grow">
                         </div>
 
                     </div>
@@ -92,7 +92,7 @@
                             &nbsp;
                         </div>
                     </div>
-                    <div class="flex flex-row items-center justify-between gap-4 w-full" v-for="(skill, index) in form.skills" :key="index">
+                    <div class="flex flex-row items-center justify-between gap-4 w-full" v-for="(skill, index) in employee.skills" :key="index">
                         <div class="w-2/6">
                             <input type="text" v-model="skill.name" name="name" id="name" class="w-full rounded-lg grow">
                         </div>
@@ -117,7 +117,7 @@
                 <div class="absolute bottom-4 right-6">
                     <button type="submit" class="rounded-3xl bg-purple-400 h-12 w-36 flex items-center text-white hover:bg-purple-600 text-sm w-auto">
                         <svg class="w-6 h-6 pr-1 fill-white stroke-purple-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>Save and Add <br> Employee</span>
+                        <span>Save Changes to <br> Employee</span>
                     </button>
                 </div>
 
@@ -130,69 +130,37 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { toRef, onMounted, computed } from 'vue';
 import useEmployees from "../../composables/employees";
 export default {
-    name: 'EmployeeCreate',
-    setup(){
-        const form = reactive({
-            first_name: '',
-            last_name: '',
-            email: '',
-            date_of_birth: '',
-            address: '',
-            city: '',
-            postal_code: '',
-            country: '',
-            skills: [{
-                name: '',
-                years_of_experience: '',
-                rating: ''
-            }]
-        });
+    name: 'EmployeeEdit',
+    props: {
+        id: {
+            required: true,
+            type: Number
+        }
+    },
+    setup(props){
+        const {employee, getEmployee } = useEmployees();
 
-        const {errors, storeEmployee } = useEmployees();
+        const employeeId = toRef(props, 'id');
+        //const employeeId = computed(()=>props.id);
+
+        console.log(employeeId.value);
+
+        onMounted(getEmployee(employeeId.value));
 
         const saveEmployee = async () => {
-            await storeEmployee({...form});
+            await saveEmployee(employee);
         };
 
         return {
-            form,
-            errors,
-            saveEmployee
+            employee,
+            //errors,
+            //saveEmployee
         }
     },
-    /*data() {
-        return {
-            count: 2,
-            errors: '',
-            form: {
-                first_name: '',
-                last_name: '',
-                email: '',
-                phone: '',
-                date_of_birth: '',
-                address: '',
-                city: '',
-                postal_code: '',
-                country: '',
-                skills: [
-                    {
-                        name: '',
-                        years_of_experience: '',
-                        rating: 'Beginner'
-                    }
-                ]
-            },
-            skills: [{
-                index: 1,
-                name: '',
-                years_of_experience: '',
-                rating: ''
-            }]
-        }
-    },*/
+
     methods: {
         AddField(){
             this.form.skills.push({

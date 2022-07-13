@@ -9,8 +9,12 @@
             <div class="basis-1/2">
                 <input type="text" placeholder="Search" class="w-full rounded-lg grow">
             </div>
-            <div>
-                Filter By
+            <div class="w-36">
+                <select class="rounded-xl border-none p-0 pl-2 w-full bg-[#110010]" id="filter">
+                    <option>Filter By</option>
+                    <option>Beginner</option>
+                    <option>Expert</option>
+                </select>
             </div>
             <div>
                 <button @click="addNewEmployee" class="rounded-3xl bg-purple-400 p-3 flex items-center text-white hover:bg-purple-600 text-sm w-auto">
@@ -22,7 +26,7 @@
 
         <div class="flex flex-col items-center justify-center w-full gap-8" v-if="employees.length > 0">
             <div v-for="(employee, index ) in employees" :key="employee.id" class="w-full">
-                <div class="text-xl flex flex-row items-center justify-between gap-28 border rounded-2xl bg-gray-400 p-4">
+                <div class="text-xl flex flex-row items-center justify-between gap-28 border rounded-2xl bg-stone-400 p-4">
                     <div>
                         <span class="border-2 border-purple-900 p-1 px-3 rounded-full text-purple-900">{{index}}</span>
                     </div>
@@ -40,7 +44,7 @@
                     </div>
 
                     <div class="flex">
-                        <a>
+                        <a @click="editEmployee(employee.id)">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                         </a>
                         <a @click="deleteEmployee(employee.id)">
@@ -95,6 +99,9 @@ export default {
     methods: {
         addNewEmployee(){
             this.$emit('addNewEmployee');
+        },
+        editEmployee(id){
+            this.$emit('editEmployee', id);
         }
     }
 }

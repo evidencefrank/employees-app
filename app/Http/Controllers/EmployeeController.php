@@ -37,7 +37,12 @@ class EmployeeController extends Controller
      */
     public function store(StoreEmployeeRequest $request)
     {
-        $employee = Employee::create($request->validated());
+        $employeeData = $request->validated();
+        $employeeData['uuid'] = $this->generateUuid();
+
+        $employee = Employee::query()->create($employeeData);
+
+        $employee->skills()->createMany($employeeData['skills']);
         return new EmployeeResource($employee);
     }
 
@@ -86,5 +91,22 @@ class EmployeeController extends Controller
     {
         $employee->delete();
         return response()->noContent();
+    }
+
+    /**
+     * @return string
+     */
+    protected function generateUuid(): string
+    {
+        $letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $numbers = '0123456789';
+        $uuid = '';
+        for ($i = 0; $i < 2; $i++) {
+            $uuid .= $letters[rand(0, strlen($letters) - 1)];
+        }
+        for ($i = 0; $i < 4; $i++) {
+            $uuid .= $numbers[rand(0, strlen($numbers) - 1)];
+        }
+        return $uuid;
     }
 }
