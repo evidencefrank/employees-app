@@ -141,7 +141,7 @@ export default {
         }
     },
     setup(props){
-        const {employee, getEmployee } = useEmployees();
+        const {employee, getEmployee, updateEmployee } = useEmployees();
 
         const employeeId = toRef(props, 'id');
         //const employeeId = computed(()=>props.id);
@@ -151,13 +151,13 @@ export default {
         onMounted(getEmployee(employeeId.value));
 
         const saveEmployee = async () => {
-            await saveEmployee(employee);
+            await updateEmployee(employeeId.value);
         };
 
         return {
             employee,
             //errors,
-            //saveEmployee
+            saveEmployee
         }
     },
 

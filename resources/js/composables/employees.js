@@ -17,6 +17,7 @@ export default function useEmployees(){
         employee.value = response.data.data;
     }
 
+
     const storeEmployee = async (data) => {
         errors.value = '';
         try {
@@ -30,6 +31,19 @@ export default function useEmployees(){
         }
 
     }
+    const updateEmployee = async (id) => {
+            errors.value = '';
+            try {
+                await axios.put('/employees/' + id, employee.value);
+            } catch (e) {
+                if(e.response.status === 422){
+                    for(const key in e.response.data.errors){
+                        errors.value += e.response.data.errors[key][0] + '<br>';
+                    }
+                }
+            }
+
+        }
 
     const destroyEmployee = async (id) => {
         await axios.delete('/employees/' + id);
@@ -42,6 +56,7 @@ export default function useEmployees(){
         getEmployees,
         getEmployee,
         storeEmployee,
+        updateEmployee,
         destroyEmployee
     }
 }
