@@ -6,6 +6,7 @@ use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
+use Illuminate\Support\Arr;
 
 class EmployeeController extends Controller
 {
@@ -77,7 +78,9 @@ class EmployeeController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-        $employee = Employee::update($request->validated());
+        Employee::query()->where('id', $employee->id)->update(Arr::except($request->validated(), 'skills'));
+        $employee->skills()->delete();
+        $employee->skills()->createMany($request->validated()['skills']);
         return new EmployeeResource($employee);
     }
 

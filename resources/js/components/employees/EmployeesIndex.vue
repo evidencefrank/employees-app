@@ -7,13 +7,13 @@
                 <p v-else>No employees</p>
             </div>
             <div class="basis-1/2">
-                <input type="text" placeholder="Search" class="w-full rounded-lg grow">
+                <input type="text" placeholder="Search" v-model="searchQuery" class="w-full h-12 text-white rounded-lg grow">
             </div>
             <div class="w-36">
                 <select class="rounded-xl border-none p-0 pl-2 w-full bg-[#110010]" id="filter">
                     <option>Filter By</option>
-                    <option>Beginner</option>
-                    <option>Expert</option>
+                    <option>Years Of Experience</option>
+                    <option>Rating</option>
                 </select>
             </div>
             <div>
@@ -24,11 +24,11 @@
             </div>
         </div>
 
-        <div class="flex flex-col items-center justify-center w-full gap-8" v-if="employees.length > 0">
-            <div v-for="(employee, index ) in employees" :key="employee.id" class="w-full">
+        <div class="flex flex-col items-center justify-center w-full gap-8" v-if="searchedEmployees.length > 0">
+            <div v-for="(employee, index ) in searchedEmployees" :key="employee.id" class="w-full">
                 <div class="text-xl flex flex-row items-center justify-between gap-28 border rounded-2xl bg-stone-400 p-4">
                     <div>
-                        <span class="border-2 border-purple-900 p-1 px-3 rounded-full text-purple-900">{{index}}</span>
+                        <span class="border-2 border-purple-900 p-1 px-3 rounded-full text-purple-900">{{index + 1}}</span>
                     </div>
 
                     <div>
@@ -41,6 +41,14 @@
 
                     <div>
                         <span>{{employee.contact_number}}</span>
+                    </div>
+
+                    <div>
+                        <span>{{employee.email}}</span>
+                    </div>
+
+                    <div>
+                        <span>{{employee.uuid}}</span>
                     </div>
 
                     <div class="flex">
@@ -74,7 +82,7 @@
 
 <script>
 import useEmployees from "../../composables/employees";
-import { onMounted } from "vue";
+import {onMounted, ref, computed} from "vue";
 
 export default {
     name: 'EmployeesIndex',
@@ -83,6 +91,8 @@ export default {
 
         onMounted(getEmployees);
 
+        const searchQuery = ref('');
+
         const deleteEmployee = async(id) => {
             if(!window.confirm('Are you sure you?')) return;
 
@@ -90,8 +100,25 @@ export default {
             await getEmployees();
         };
 
+        async function refreshEmployees () {
+            await getEmployees();
+        }
+
+        const searchedEmployees = computed(() => {
+            if(searchQuery.value === '') return employees.value;
+
+            else return employees.value.filter(
+                obj => obj.first_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                obj.last_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                obj.email.toLowerCase().includes(searchQuery.value.toLowerCase())
+            );
+        });
+
         return {
             employees,
+            searchQuery,
+            searchedEmployees,
+            refreshEmployees,
             deleteEmployee
         }
     },

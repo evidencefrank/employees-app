@@ -1,14 +1,20 @@
 <template>
-    <div class="flex flex-col items-start justify-start py-4 px-6">
+    <div class="flex flex-col items-start justify-start py-4 px-6 h-full">
+        <div @click="closeForm" class="w-10 h-10 text-gray-600 flex items-center justify-center absolute top-0 right-0 mt-2 mr-12">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </div>
         <div class="mb-4">
             <h1 class="text-md font-semibold">Edit Employee</h1>
         </div>
 
-<!--        <div class="mt-2 mb-6 text-sm text-red-600" v-if="errors !== ''">-->
-<!--            <p v-html="errors"></p>-->
-<!--        </div>-->
+        <div class="mt-2 mb-6 text-sm text-red-600" v-if="errors !== ''">
+            <p v-html="errors"></p>
+        </div>
+        <div class="mt-2 mb-6 text-sm text-green-600" v-if="successStatus !== ''">
+            <p v-html="successStatus"></p>
+        </div>
 
-        <div class="overflow-scroll ">
+        <div class="overflow-scroll h-5/6">
             <form @submit.prevent="saveEmployee">
 
                 <div>
@@ -115,9 +121,9 @@
                 </div>
 
                 <div class="absolute bottom-4 right-6">
-                    <button type="submit" class="rounded-3xl bg-purple-400 h-12 w-36 flex items-center text-white hover:bg-purple-600 text-sm w-auto">
+                    <button type="submit" class="rounded-3xl bg-purple-400 h-12 w-36 px-4 flex items-center text-white hover:bg-purple-600 text-sm w-auto">
                         <svg class="w-6 h-6 pr-1 fill-white stroke-purple-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>Save Changes to <br> Employee</span>
+                        <span>Save Changes to Employee</span>
                     </button>
                 </div>
 
@@ -130,7 +136,7 @@
 </template>
 
 <script>
-import { toRef, onMounted, computed } from 'vue';
+import { toRef, onMounted, watch } from 'vue';
 import useEmployees from "../../composables/employees";
 export default {
     name: 'EmployeeEdit',
@@ -140,30 +146,38 @@ export default {
             type: Number
         }
     },
-    setup(props){
-        const {employee, getEmployee, updateEmployee } = useEmployees();
+    setup(props, {emit}){
+        const {errors, successStatus, employee, getEmployee, updateEmployee } = useEmployees();
 
         const employeeId = toRef(props, 'id');
-        //const employeeId = computed(()=>props.id);
 
-        console.log(employeeId.value);
+        watch(()=>props.id, (newId)=>{
+            getEmployee(newId);
+        });
 
         onMounted(getEmployee(employeeId.value));
 
         const saveEmployee = async () => {
             await updateEmployee(employeeId.value);
+            emit('closeForm');
+        };
+
+        const closeForm = () => {
+            emit('closeForm');
         };
 
         return {
             employee,
-            //errors,
+            errors,
+            successStatus,
+            closeForm,
             saveEmployee
         }
     },
 
     methods: {
         AddField(){
-            this.form.skills.push({
+            this.employee.skills.push({
                 index: this.count++,
                 name: '',
                 years_of_experience: '',
@@ -172,12 +186,8 @@ export default {
         },
 
         removeSkill(index){
-            this.form.skills = this.form.skills.filter(skill => skill.index !== index);
+            this.employee.skills = this.employee.skills.filter(skill => skill.index !== index);
         },
-
-        /*saveEmployee(){
-            console.log(this.form);
-        }*/
     }
 }
 </script>

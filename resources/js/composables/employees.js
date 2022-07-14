@@ -6,6 +6,7 @@ export default function useEmployees(){
     const employee = ref([]);
 
     const errors = ref('');
+    const successStatus = ref('');
 
     const getEmployees = async () => {
         let response = await axios.get('/employees');
@@ -20,8 +21,10 @@ export default function useEmployees(){
 
     const storeEmployee = async (data) => {
         errors.value = '';
+        successStatus.value = '';
         try {
             await axios.post('/employees/', data);
+            successStatus.value = 'Employee created successfully';
         } catch (e) {
             if(e.response.status === 422){
                 for(const key in e.response.data.errors){
@@ -33,8 +36,10 @@ export default function useEmployees(){
     }
     const updateEmployee = async (id) => {
             errors.value = '';
+            successStatus.value = '';
             try {
                 await axios.put('/employees/' + id, employee.value);
+                successStatus.value = 'Employee updated successfully';
             } catch (e) {
                 if(e.response.status === 422){
                     for(const key in e.response.data.errors){
@@ -53,6 +58,7 @@ export default function useEmployees(){
         employees,
         employee,
         errors,
+        successStatus,
         getEmployees,
         getEmployee,
         storeEmployee,
